@@ -67,6 +67,7 @@ if Menu == "Dashboard":
 
 #Visualization
   g1,g2,g3= st.columns((1,100,1))
+  d1,d2,d3=st.columns((5, 1, 1))
   k1,k2,k3=st.columns((1, 1, 1))
   s1,s2=st.columns((1,1))
   w1,w2=st.columns((1,1))
@@ -80,7 +81,9 @@ if Menu == "Dashboard":
   w1.plotly_chart(fig2, use_container_width=True)
   w1.write("This shows that students of group C who did not get prepared for the tests got the highest scores in both, math and reading.")
 
-  fig = px.sunburst(df, path=['gender', 'race/ethnicity'], values='math_score',color_discrete_sequence=px.colors.sequential.Agsunset,
+  score = r2.slider('Select the score', 66, 78)
+  df1 = df[df["math_score"]==score]
+  fig = px.sunburst(df1, path=['gender', 'race/ethnicity'], values='math_score',color_discrete_sequence=px.colors.sequential.Agsunset,
                   color='reading_score', hover_data=['parental level of education'], 
                   title="Chart of the reading and math scores of students depending on the parental level of education")
   
@@ -93,11 +96,19 @@ if Menu == "Dashboard":
   fig5 = px.ecdf(df, x="math_score", color="race/ethnicity", title="Line graph of the math scores depending on the race/ethnicity of the student", color_discrete_sequence=px.colors.sequential.Agsunset)
   s2.plotly_chart(fig5, use_container_width=True)
 
-  fig4 = px.pie(df, values='math_score', names='gender', title='Math scores vs gender',color_discrete_sequence=px.colors.sequential.Agsunset)
-  k1.plotly_chart(fig4, use_container_width=True)
+  d1.write("Choose the Pie Chart of the courses with the gender for the percentage:")
+  math_score= d1.checkbox('math score')
+  reading_score = d1.checkbox('reading score')
+  writing_score = d1.checkbox('writing score')
 
-  fig7 = px.pie(df, values='reading_score', names='gender', title='Reading scores vs gender', color_discrete_sequence=px.colors.sequential.Agsunset)
-  k2.plotly_chart(fig7, use_container_width=True)
+  fig4=px.pie(df, values="math_score", names="gender", title='Math scores vs gender',color_discrete_sequence=px.colors.sequential.Agsunset)
 
-  fig6 = px.pie(df, values='writing_score', names='gender', title='Writing scores vs gender', color_discrete_sequence=px.colors.sequential.Agsunset)
-  k3.plotly_chart(fig6, use_container_width=True)
+  fig7 = px.pie(df, values="reading_score", names="gender", title='Reading scores vs gender', color_discrete_sequence=px.colors.sequential.Agsunset)
+
+  fig6 = px.pie(df, values= "writing_score", names="gender", title='Writing scores vs gender', color_discrete_sequence=px.colors.sequential.Agsunset)
+  if math_score:
+        k1.plotly_chart(fig4, use_container_width=True)
+  if reading_score:
+        k2.plotly_chart(fig7, use_container_width=True)
+  if writing_score:
+        k3.plotly_chart(fig6, use_container_width=True)
